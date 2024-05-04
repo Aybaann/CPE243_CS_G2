@@ -1,0 +1,17 @@
+---
+- name: Update Docker
+  hosts: server2
+  become: yes
+  tasks:
+    - name: Update Docker packages
+      apt:
+        name: docker.io
+        state: latest
+      tags:
+        - docker
+    - name: Restart Docker service
+      service:
+        name: docker
+        state: restarted
+      tags:
+        - docker
