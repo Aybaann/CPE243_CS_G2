@@ -1,0 +1,25 @@
+#Access_Control
+- name: Implement password policies
+  copy:
+    src: /home/ivan/files/etc/pass_quality/pwquality.conf
+    dest: /etc/security/pwquality.conf
+    remote_src: yes
+  notify: Restart the Service
+
+- name: Configure user authentication
+  copy:
+    src: /home/ivan/files/etc/ssh/ssh_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: 0644
+    owner: root
+    group: root
+    remote_src: yes
+
+- name: Implement access control policies
+  copy:
+    src: /home/ivan/files/etc/sudoers.d/sudoers.j2
+    dest: /etc/sudoers
+    mode: 0440
+    owner: root
+    group: root
+    remote_src: yes

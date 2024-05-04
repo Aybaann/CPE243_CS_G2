@@ -1,0 +1,10 @@
+---
+- name: Hilflyer canada
+  hosts: all
+  become: true
+
+  roles:
+    - firewall
+    - OpenSSL
+    - Access_Control
+    - Data_sec

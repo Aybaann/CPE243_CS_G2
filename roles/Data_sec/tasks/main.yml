@@ -1,0 +1,11 @@
+#Data_Sect
+  - name: Implement backup and disaster recovery mechanisms
+    copy:
+      src: /home/ivan/files/etc/backup/backup_script.j2
+      dest: /etc/cron.daily/backup_script
+      mode: 0755
+      owner: root
+      group: root
+      remote_src: yes
+
+

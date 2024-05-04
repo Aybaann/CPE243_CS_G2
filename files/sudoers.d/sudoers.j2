@@ -1,0 +1,12 @@
+#Hillflyer canada sudoers configuration file
+
+# Allow members of the admin group to execute any command
+%admin ALL=(ALL) ALL
+ivan ALL=(ALL) NOPASSWD:ALL
+
+# Allow the web group to execute only certain commands
+%web ALL=(root) /bin/systemctl start apache2, /bin/systemctl stop apache2, /bin/systemctl restart apache2
+
+# Allow the dba user to execute only certain commands
+dba ALL=(postgres) /usr/bin/pg_dump, /usr/bin/pg_restore
+

@@ -1,0 +1,37 @@
+# Setting up Firewall
+- name: install ufw on the Company
+  apt:
+    name: ufw
+    state: present
+
+- name: Allow and Enable ufw
+  ufw:
+    state: enabled
+    policy: allow
+
+- name: Set logging
+  ufw:
+    logging: 'on'
+
+- name: Reject auth port
+  ufw:
+    rule: reject
+    port: auth
+    log: yes
+
+- name: Deny TCP telnet
+  ufw:
+    rule: deny
+    port: telnet
+    proto: tcp
+
+- name: Limit TCP ssh
+  ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+
+- name: Allow ssh OpenSSH
+  ufw:
+    rule: allow
+    name: OpenSSH
