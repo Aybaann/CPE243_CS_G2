@@ -1,0 +1,41 @@
+---
+- name: Install OpenSSL, cryptography, and generate CA certificate
+  hosts: localhost
+  tasks:
+    - name: Install OpenSSL and cryptography
+      apt:
+        name: install openssl
+	apt:
+	 name:openssl	
+         state: present
+      loop:
+        - openssl
+        - python3-cryptography  # This is the package name for cryptography library in Ubuntu/Debian
+        - python3-pip            # Install pip to ensure the availability of Python package manager
+      become: true  # This task requires root privileges
+
+    - name: Generate CA key
+      openssl_privatekey:
+        path: /etc/ssl/private/ca.key
+        size: 4096
+      register: ca_ssl_key
+
+    - name: Generate CA certificate signing request (CSR)
+      openssl_csr:
+        path: /etc/ssl/certs/ca.csr
+        privatekey_path: /etc/ssl/private/ca.key
+        common_name: "CA WITH SSL"
+        country_name: "PH"
+        state_or_province_name: "Metro Manila"
+        locality_name: "Pantranco - Quezon City"
+        organization_name: "Hilflyer canada"
+        email_address: "mainaddress@gmail.com"
+      register: ca_csr
+
+    - name: Self-signed CA certificate
+      openssl_certificate:
+        path: /etc/ssl/certs/ca.crt
+        privatekey_path: /etc/ssl/private/ca.key
+        csr_path: /etc/ssl/certs/ca.csr
+        provider: selfsigned
+        force: true
