@@ -1,0 +1,16 @@
+!/bin/bash
+
+# Hilfyler canada  backup script
+
+# Set backup directory and filename
+backup_dir="/backup"
+backup_file="backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+
+# Create backup archive
+tar -czf "$backup_dir/$backup_file" /etc /home /var/log /var/www
+
+# Send notification email
+echo "Backup completed at $(date)" | mail -s "hilflyer canada Backup" admin@hilfyler.com
+
+
+
