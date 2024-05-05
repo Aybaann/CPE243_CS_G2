@@ -1,1 +1,43 @@
-paste here
+---
+- name: Setting up Firewall
+  hosts: employee
+  become: true
+  vars:
+    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+  tasks:
+    - name: INSTALL UFW ON SERVERS
+      apt:
+        name: ufw
+        state: present
+
+    - name: ALLOW & ENABLE UFW
+      ufw:
+        state: enabled
+        policy: allow
+
+    - name: SET LOGGING
+      ufw:
+        logging: 'on'
+
+    - name: REJECT AUTH PORT
+      ufw:
+        rule: reject
+        port: auth
+        log: yes
+
+    - name: DENY TCP TELNET
+      ufw:
+        rule: deny
+        port: telnet
+        proto: tcp
+
+    - name: LIMIT TCP SSH
+      ufw:
+        rule: limit
+        port: ssh
+        proto: tcp
+
+    - name: ALLOW SSH OPENSSH
+      ufw:
+        rule: allow
+        name: OpenSSH
