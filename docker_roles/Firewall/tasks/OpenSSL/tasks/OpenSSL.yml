@@ -1,26 +1,35 @@
 ---
-- name: Install OpenSSL, cryptography, and generate CA certificate
-  hosts: localhost
+- name: OpenSSL
+  hosts: company_server
+  become: yes 
+  vars:
+    ansible_ssh_private_key_file: ~/.ssh/id25519
   tasks:
-    - name: Install OpenSSL and cryptography
+    - name: Install required packages
       apt:
         name: install openssl
-	apt:
-	 name:openssl	
          state: present
       loop:
         - openssl
         - python3-cryptography  # This is the package name for cryptography library in Ubuntu/Debian
-        - python3-pip            # Install pip to ensure the availability of Python package manager
-      become: true  # This task requires root privileges
+        - python3-pip 
+	- python3-packaging 
+      when: ansible_pkg_mgr == "apt" # Install pip to ensure the availability of Python package manager
 
+    # Check if python3-cryptography is installed
+    - name: Check if python3-cryptography is installed
+      command: dpkg -l | grep python3-cryptography
+      register: cryptography_check
+      changed_when: false
+      failed_when: false
+      
     - name: Generate CA key
       openssl_privatekey:
         path: /etc/ssl/private/ca.key
         size: 4096
       register: ca_ssl_key
 
-    - name: Generate CA certificate signing request (CSR)
+    - name: Generate CA certificate 
       openssl_csr:
         path: /etc/ssl/certs/ca.csr
         privatekey_path: /etc/ssl/private/ca.key
